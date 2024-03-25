@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice 3</title>
+</head>
+<body>
+    <h1>Livre</h1>
+    
+    <label for="books">Choisit un livre:</label>
+    <select id="books">
+    </select>
+    
+    <div id="bookInfo">
+    </div>
+    
+    <h2>les Cart</h2>
+    <ul id="cart">
+
+    </ul>
+    
+    <p>Le Prix Totale: <span id="totalPrice">0</span></p>
+
+    <script>
+        fetch('books.json')
+            .then(response => response.json())
+            .then(data => {
+                const bDropdown = document.getElementById('books');
+                data.books.forEach(book => {
+                    const option = document.createElement('option');
+                    option.value = book.title;
+                    option.textContent = book.title;
+                    bDropdown.appendChild(option);
+                });
+            });
+
+        document.getElementById('books').addEventListener('change', function() {
+            const selectedBookTitle = this.value;
+            fetch('books.json')
+                .then(response => response.json())
+                .then(data => {
+                    const selectedBook = data.books.find(book => book.title === selectedBookTitle);
+                    document.getElementById('bookInfo').innerHTML = `
+                        <h3>${selectedBook.title}</h3>
+                        <p>Author: ${selectedBook.author}</p>
+                        <p>Price: $${parseFloat(selectedBook.price)}</p>
+                        <button onclick="add('${selectedBook.title}', ${parseFloat(selectedBook.price)})">Add to Cart</button>
+                    `;
+                });
+        });
+
+        function add(title, price) {
+            const cart = document.getElementById('cart');
+            const item = document.createElement('li');
+            item.textContent = `${title} - $${price}`;
+            cart.appendChild(item);
+            updateTPrice(price);
+        }
+
+        function removeFromCart(price) {
+            const cart = document.getElementById('cart');
+            const items = cart.getElementsByTagName('li');
+            if (items.length > 0) {
+                const lastItem = items[items.length - 1];
+                cart.removeChild(lastItem);
+                updateTPrice(-price);
+            }
+        }
+        function updateTPrice(price) {
+            const totalPriceElement = document.getElementById('totalPrice');
+            let totalPrice = parseFloat(totalPriceElement.textContent);
+            totalPrice += price;
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exercice2</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            font-weight: 500;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+        div{
+            margin: 2px;
+            padding: 10px;
+            border: 2px black solid;
+            border-radius: 20px;
+            box-shadow: 3px 3px ;
+            background-color: antiquewhite;
+            width: fit-content;
+        }
+        input , button{
+            margin: 3px;
+        }
+        button{
+            background-color: antiquewhite;
+            width: fit-content;
+        }
+        p{
+            font-size: large;
+        }
+    </style>
+</head>
+<body>
+    <h1>Géstionnaire des tâches hebdomadaires</h1>
+    <br>
+    <h1>Il est actuellement</h1>
+    <p id="display"></p>
+
+    <button onclick="addReminder()">Add A Reminder</button>
+    
+</body>
+<script>
+    
+
+    function update_time() {
+        let d = new Date()
+        let h = d.getHours()
+        let m = d.getMinutes()
+        let s = d.getSeconds()
+
+        let p = document.getElementById('display') 
+        p.innerHTML = h + ":" + m + ":" + s ;
+
+        let tasks = document.getElementsByTagName('div')
+        if (tasks.length !== 0) {
+            for (let index = 0; index < tasks.length; index++) {
+                    if (tasks[index].children[0].checked === true){
+                        if (Number(tasks[index].children[1].value) === h && Number(tasks[index].children[2].value) === m) {
+                            alert(tasks[index].children[3].value)
+                            tasks[index].children[0].checked = false;
+                        }
+                    }
+                
+            
+            }
+        }
+        
+    }
+    setInterval(update_time, 1000);
+
+    function addReminder() {
+        let b = document.getElementsByTagName('body')[0]
+        let p_h = document.createElement('input')
+        p_h.type = 'number'
+        p_h.value = 0
+        let p_m = document.createElement('input')
+        p_m.type = 'number'
+        p_m.value = 0
+        let p_n = document.createElement('input')
+        p_n.type = 'text'
+        p_n.value = 'write something'
+        let p_check = document.createElement('input')
+        p_check.type = "checkbox"
+
+        let p_destroy = document.createElement('button')
+        p_destroy.textContent = "Destroy"
+        p_destroy.addEventListener('click', function() {
+            this.parentNode.remove(); 
+        });
+
+        let d = document.createElement('div')
+
+        d.appendChild(p_check)
+        d.appendChild(p_h)
+        d.appendChild(p_m)
+        d.appendChild(p_n)
+        d.appendChild(p_destroy)
+
+        b.appendChild(d)
+
+    }
+
+</script>
+</html>
